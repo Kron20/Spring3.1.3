@@ -45,7 +45,7 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @PutMapping("/{id}/update")
+    @PostMapping("/{id}/update")
     public String updateUser(@ModelAttribute("user") User user, Model model) {
         model.addAttribute("roles", roleService.getAllRoles());
         getUserRoles(user);
@@ -53,10 +53,10 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @DeleteMapping("/{id}/delete")
-    public String deleteUser(@PathVariable("id") long id) {
+    @PostMapping("/{id}/delete")
+    public String deleteUser(@ModelAttribute("deleteUser") User user, @PathVariable("id") Long id) {
         userService.deleteUser(id);
-        return "redirect:/admin";
+        return "redirect:/admin/";
     }
 
     private void getUserRoles(User user) {
