@@ -17,13 +17,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class RestApiController {
-    private final UserService userService;
     private final RoleService roleService;
+    private final UserService userService;
 
     @Autowired
-    public RestApiController(UserService userService, RoleService roleService) {
-        this.userService = userService;
+    public RestApiController(RoleService roleService, UserService userService) {
         this.roleService = roleService;
+        this.userService = userService;
     }
 
     @GetMapping("/users")
@@ -32,11 +32,11 @@ public class RestApiController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUser(@PathVariable(name ="id") Long id) {
+    public ResponseEntity<User> getUser(@PathVariable(name = "id") Long id) {
         try {
             User user = userService.getUserById(id);
             return new ResponseEntity<>(user, HttpStatus.OK);
-        }catch (UserNotFoundException e) {
+        } catch (UserNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -51,26 +51,26 @@ public class RestApiController {
     public ResponseEntity<?> update(@RequestBody User user, @PathVariable("id") Long id) {
         try {
             User thisUser = userService.getUserById(id);
-            userService.updateUser(user);
+            userService.editUser(user);
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch (UserNotFoundException e) {
+        } catch (UserNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<User> delete(@PathVariable("id") Long id) {
-        userService.deleteUser(id);
+        userService.deleteUserById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/roles")
-    ResponseEntity<List<Role>>getAllRoles(){
+    ResponseEntity<List<Role>> getAllRoles() {
         return new ResponseEntity<>(roleService.getAllRoles(), HttpStatus.OK);
     }
 
     @GetMapping("/roles/{id}")
-    ResponseEntity<Role> getRoleById(@PathVariable("id") Long id){
+    ResponseEntity<Role> getRoleById(@PathVariable("id") Long id) {
         return new ResponseEntity<>(roleService.getRoleById(id), HttpStatus.OK);
     }
 }

@@ -202,7 +202,7 @@ newUserForm.addEventListener('submit', (e) => {
                     age: newAge.value,
                     email: newEmail.value,
                     password: newPassword.value,
-                    roles: rolesArr
+                    roles: rolesJ
                 })
             });
 

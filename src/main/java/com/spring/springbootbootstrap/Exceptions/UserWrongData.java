@@ -3,7 +3,8 @@ package com.spring.springbootbootstrap.Exceptions;
 public class UserWrongData {
     private String info;
 
-    public UserWrongData() {}
+    public UserWrongData() {
+    }
 
     public String getInfo() {
         return info;

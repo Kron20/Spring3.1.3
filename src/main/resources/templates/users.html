@@ -82,8 +82,8 @@
                                                     <thead>
                                                     <tr>
                                                         <th>Id</th>
-                                                        <th>FirstName</th>
-                                                        <th>LastName</th>
+                                                        <th>First Name</th>
+                                                        <th>Last Name</th>
                                                         <th>Age</th>
                                                         <th>Email</th>
                                                         <th>Role</th>
@@ -106,13 +106,13 @@
                                                 <div class="col-md-4 text-center">
                                                     <form id="newUserForm">
                                                         <div>
-                                                            <label for="newFirstName" class="fw-bold pb-0 pt-2">FirstName</label>
+                                                            <label for="newFirstName" class="fw-bold pb-0 pt-2">First Name</label>
                                                             <input class="form-control" required type="text"
                                                                    id="newFirstName" placeholder="FirstName">
                                                         </div>
                                                         <div>
                                                             <label for="newLastName"
-                                                                   class="fw-bold pb-0 pt-2">LastName</label>
+                                                                   class="fw-bold pb-0 pt-2">Last Name</label>
                                                             <input class="form-control" required type="text"
                                                                    id="newLastName" placeholder="LastName">
                                                         </div>
@@ -171,13 +171,13 @@
                                                            name="id">
                                                 </div>
                                                 <div>
-                                                    <label for="editFirstName" class="fw-bold pb-0 pt-2">FirstName</label>
+                                                    <label for="editFirstName" class="fw-bold pb-0 pt-2">First Name</label>
                                                     <input required type="text" class="form-control"
                                                            id="editFirstName" name="firstName">
                                                 </div>
                                                 <div>
                                                     <label for="editLastName"
-                                                           class="fw-bold pb-0 pt-2">LastName</label>
+                                                           class="fw-bold pb-0 pt-2">Last Name</label>
                                                     <input required type="text" class="form-control"
                                                            id="editLastName" name="lastName">
                                                 </div>
@@ -293,8 +293,8 @@
                                             <thead>
                                             <tr>
                                                 <th>Id</th>
-                                                <th>FirstName</th>
-                                                <th>LastName</th>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
                                                 <th>Age</th>
                                                 <th>Email</th>
                                                 <th>Role</th>
@@ -329,6 +329,5 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
 <script sec:authorize="hasRole('ROLE_ADMIN')" type="text/javascript" src="../static/admin.js"
         th:src="@{/admin.js}"></script>
-<script type="text/javascript" src="../static/active_button.js" th:src="@{/active_button.js}"></script>
 </body>
 </html>

@@ -19,7 +19,7 @@ public class AdminController {
 
 
     @GetMapping("")
-    public String rootBoot(){
+    public String rootBoot() {
         return "redirect:/login";
     }
 }
