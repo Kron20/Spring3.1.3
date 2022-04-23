@@ -1,18 +1,26 @@
 package com.spring.springbootbootstrap.service;
 
 import com.spring.springbootbootstrap.model.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+
 import java.util.List;
 
-public interface UserService {
-    void saveUser(User user);
 
-    void updateUser(User user);
-
-    void deleteUser(long id);
+public interface UserService extends UserDetailsService {
 
     List<User> getAllUsers();
 
-    User getUserByLogin(String login);
+    boolean saveUser(User user);
 
-    User getUserById(long id);
+    User getUserById(Long id);
+
+    void deleteUserById(Long id);
+
+    UserDetails loadUserByUsername(String email);
+
+    void editUser(User user);
+
+    boolean existsById(Long id);
+
 }

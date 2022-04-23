@@ -1,68 +1,72 @@
 package com.spring.springbootbootstrap.service;
 
-import com.spring.springbootbootstrap.dao.UserDao;
 import com.spring.springbootbootstrap.model.User;
+import com.spring.springbootbootstrap.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+
 import java.util.List;
 
+
 @Service
-public class UserServiceImpl implements UserService, UserDetailsService {
-    private final UserDao userDao;
+@Transactional(readOnly = true)
+public class UserServiceImpl implements UserService {
+    private final UserRepository userRepository;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    @Lazy
-    public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder) {
-        this.userDao = userDao;
+    public UserServiceImpl(UserRepository userRepository, RoleService roleService, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    @Transactional
-    public void saveUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userDao.saveUser(user);
-    }
-
-    @Override
-    @Transactional
-    public void updateUser(User user) {
-        if (!user.getPassword().equals(userDao.getUserById(user.getId()).getPassword())) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
-        userDao.updateUser(user);
-    }
-
-    @Override
-    @Transactional
-    public void deleteUser(long id) {
-        userDao.deleteUser(id);
-    }
-
-    @Override
     public List<User> getAllUsers() {
-        return userDao.getAllUsers();
+        return userRepository.findAll();
     }
 
     @Override
-    public User getUserByLogin(String login) {
-        return userDao.getUserByLogin(login);
+    @Transactional
+    public boolean saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (userRepository.findByEmail(user.getEmail()) != null) {
+            return false;
+        }
+        userRepository.saveAndFlush(user);
+        return true;
     }
 
     @Override
-    public User getUserById(long id) {
-        return userDao.getUserById(id);
+    public User getUserById(Long id) {
+        return userRepository.findById(id).get();
     }
 
     @Override
-    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        return userDao.getUserByLogin(login);
+    @Transactional
+    public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    @Transactional
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+        return userRepository.findByEmail(username);
+    }
+
+    @Transactional
+    @Override
+    public void editUser(User user) {
+        userRepository.saveAndFlush(user);
+    }
+
+    public boolean existsById(Long id) {
+        return userRepository.existsById(id);
     }
 }
+
