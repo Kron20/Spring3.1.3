@@ -10,7 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -31,23 +33,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/admin/**").access("hasAnyAuthority('ADMIN')")
-                .antMatchers("/user/**").access("hasAnyAuthority('ADMIN', 'USER')")
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .successHandler(loginSuccessHandler)
-                .and()
-                .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
-                .logoutSuccessUrl("/");
+        http.csrf().disable();
+        CharacterEncodingFilter filter = new CharacterEncodingFilter();
+        filter.setEncoding("UTF-8");
+        filter.setForceEncoding(true);
+        http.addFilterBefore(filter, CsrfFilter.class);
+        http.authorizeRequests()
+                .antMatchers("/*").permitAll()
+                .antMatchers("/user").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+                .antMatchers("/api/users/**").access("hasAnyRole('ROLE_ADMIN')")
+                .and().formLogin()
+                .successHandler(loginSuccessHandler);
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }

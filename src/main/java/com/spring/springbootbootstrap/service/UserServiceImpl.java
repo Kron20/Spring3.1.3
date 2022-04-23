@@ -1,6 +1,8 @@
 package com.spring.springbootbootstrap.service;
 
+import com.spring.springbootbootstrap.Exceptions.UserNotFoundException;
 import com.spring.springbootbootstrap.dao.UserDao;
+import com.spring.springbootbootstrap.model.Role;
 import com.spring.springbootbootstrap.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -10,17 +12,23 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
+
     private final UserDao userDao;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     @Lazy
-    public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserDao userDao, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
+        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -62,7 +70,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        return userDao.getUserByLogin(login);
+    public UserDetails loadUserByUsername(String email) throws UserNotFoundException {
+        return userDao.getUserByLogin(email);
+    }
+    public Set<Role> getSetOfRoles(List<String> role_string) {
+        Set<Role> roles = new HashSet<>();
+        for (String roleOfName : role_string) {
+            roles.add(roleService.getRole(roleOfName));
+        }
+        return roles;
     }
 }

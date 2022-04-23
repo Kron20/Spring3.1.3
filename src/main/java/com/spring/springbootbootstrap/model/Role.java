@@ -1,34 +1,33 @@
 package com.spring.springbootbootstrap.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import java.util.Set;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "roles")
 public class Role implements GrantedAuthority {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
     private Long id;
 
-    @Column(name = "role", unique = true)
-    private String userRole;
+    @Column(name = "name")
+    private String name;
 
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles")
+    private List<User> users = new ArrayList<>();
 
-    public Role() {
-    }
+    public Role() {}
 
-    public Role(String userRole) {
-        this.userRole = userRole;
+    public Role(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public Long getId() {
@@ -39,29 +38,29 @@ public class Role implements GrantedAuthority {
         this.id = id;
     }
 
-    public String getUserRole() {
-        return userRole;
+    public String getName() {
+        return this.name;
     }
 
-    public void setUserRole(String role) {
-        this.userRole = role;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Set<User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public void setUsers(Set<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 
     @Override
-    public String getAuthority() {
-        return userRole;
+    public String toString() {
+        return getName();
     }
 
     @Override
-    public String toString() {
-        return userRole;
+    public String getAuthority() {
+        return getName();
     }
 }
